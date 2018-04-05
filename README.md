@@ -15,6 +15,13 @@ AWS_SECRET_ACCESS_KEY
 ```
 You'll also need to install the AWS cli, and call "aws configure" to set yourself up to run.  The doc for that is [here](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-quick-configuration)
 
+Next, git clone this repo, cd into the directory and
+```
+git clone https://github.com/openshift/openshift-ansible.git
+git checkout release-3.9
+
+```
+
 Having done all that, you will then need to upload [the cloudformation template](../blob/CloudFormationTemplate) to an S3 bucket, and then type the following incantation (substituting your information where you see angle brackets):
 ```
 aws cloudformation create-stack --region us-east-1  \
