@@ -48,7 +48,7 @@ oc adm policy add-cluster-role-to-user cluster-admin admin
 ```
 And you should be in business:  go to your master node public DNS at port 8443 and start being shifty!
 
-## Things learned along the way
+## Things Learned Along the Way
 
 ### Opt For The Containerized Install
 I inititially tried the RPM install which is the default, but it appears that origin builds container images more frequently than RPMs - the RPMs that got pulled down were labeled as alpha and still had bugs that prevented the install from working.
