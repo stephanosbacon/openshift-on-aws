@@ -2,9 +2,11 @@
 
 ## Cookbook Instructions
 
-This repo contains a cloud formation template and ansible scripts for setting up a simple 3-node OpenShift Origin cluster on AWS.  This started as a short exercise so I could have a cluster at my disposal on which to try things for which minishift on my laptop would not be sufficient.  In the process, I learned a few things that I thought I'd capture.
+This repo contains a cloud formation template and ansible scripts for setting up a simple 3-node (1 master, 2 app nodes) OpenShift Origin cluster on AWS.  This started as a short exercise so I could have a cluster at my disposal on which to try things for which minishift on my laptop would not be sufficient.  In the process, I learned a few things that I thought I'd capture.
 
 To give credit its due, I started by reading [this excellent blog post](https://sysdig.com/blog/deploy-openshift-aws/) that describes how to set up a 3.6 cluster.  A lot has changed between 3.6 and 3.9, so getting things working required changes to the cloud formation template, as well as to the inventory file.  More on that later.
+
+Another resource that is very informative is [this](https://github.com/gnunn1/openshift-aws-setup) github repo that has a more sophisticated (and better automated) openshift-on-aws setup.  It relies on ansible to set up the aws environment, as well as the openshift deployment.
 
 In order to run these scripts, you will need an AWS account, AWS access keys, as well as a key pair.  In order to generate access keys, follow the instructions [here](https://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html).  Access keys are used for programmatic access (e.g. when you run aws cloudformation).  In order to generate an EC2 Key Pair, follow the instructions [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html).  You'll associate the key pair with your instances so you can SSH in.
 
