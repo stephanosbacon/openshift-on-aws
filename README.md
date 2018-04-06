@@ -8,6 +8,8 @@ To give credit its due, I started by reading [this excellent blog post](https://
 
 Another resource that is very informative is [this](https://github.com/gnunn1/openshift-aws-setup) github repo that has a more sophisticated (and better automated) openshift-on-aws setup.  It relies on ansible to set up the aws environment, as well as the openshift deployment.
 
+Finally - for quick reference, [here's](https://docs.openshift.org/latest/install_config/configuring_aws.html) a link to the openshift origin doc for configuring for aws.
+
 In order to run these scripts, you will need an AWS account, AWS access keys, as well as a key pair.  In order to generate access keys, follow the instructions [here](https://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html).  Access keys are used for programmatic access (e.g. when you run aws cloudformation).  In order to generate an EC2 Key Pair, follow the instructions [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html).  You'll associate the key pair with your instances so you can SSH in.
 
 You'll need to set the following environment variables:
