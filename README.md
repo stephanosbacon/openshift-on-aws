@@ -36,14 +36,14 @@ aws cloudformation create-stack --region us-east-1  \
 ```
 As it stands, things are hard-coded to run in the us-east-1e zone.  The ami id is also hard coded (It is the official CentOS 7.4 AMI)
 
-Once the stack is set up, first, edit hosts.yml, replacing the DNS names of the machines with the ones that you just created, and then run the following in sequence of commands:
+Once the stack is set up, first, edit hosts, replacing the DNS names of the machines with the ones that you just created, and then run the following in sequence of commands:
 
 ```
-ansible-playbook prepare.yml -i ./hosts.yml --key-file <your keypair>.pem
+ansible-playbook prepare.yml -i ./hosts --key-file <your keypair>.pem
 
-ansible-playbook -i hosts.yml openshift-ansible/playbooks/prerequisites.yml --key-file <your keypair>.pem
+ansible-playbook -i hosts openshift-ansible/playbooks/prerequisites.yml --key-file <your keypair>.pem
 
-ansible-playbook -i hosts.yml openshift-ansible/playbooks/deploy_cluster.yml --key-file <your keypair>.pem
+ansible-playbook -i hosts openshift-ansible/playbooks/deploy_cluster.yml --key-file <your keypair>.pem
 ```
 Once that is done, ssh into the master and type
 ```
@@ -69,7 +69,7 @@ I didn't see this documented anywhere, but apparently as of openshift 3.7, one h
 The "openshift-on-aws" part can be whatever you want, but I think it has to match.  If you don't do this, the deploy_cluster.yml playbook will fail complaining about the lack of labeling.
 
 ### Setting osm_etcd_image
-I think this is a bug, but what I found was that the install failed when trying to check for the existence of the etcd image unless I have the following in the [inventory file](../blob/hosts.yml):
+I think this is a bug, but what I found was that the install failed when trying to check for the existence of the etcd image unless I have the following in the [inventory file](../blob/hosts):
 ```
 # This is needed because by default the installer registry.access.redhat.com
 # even if the deployment type is origin:
