@@ -2,6 +2,7 @@
 masters
 etcd
 nodes
+glusterfs
 
 [OSEv3:vars]
 
@@ -60,12 +61,21 @@ openshift_portal_net=172.30.0.0/16
 openshift_repos_enable_testing=True
 
 [masters]
-ec2-54-210-205-226.compute-1.amazonaws.com
+openshift-master
 
 [etcd]
-ec2-54-210-205-226.compute-1.amazonaws.com
+openshift-master
+
+[glusterfs]
+openshift-gluster1 glusterfs_devices='[ "/dev/xvdc" ]'
+openshift-gluster2 glusterfs_devices='[ "/dev/xvdc" ]'
+openshift-gluster3 glusterfs_devices='[ "/dev/xvdc" ]'
 
 [nodes]
-ec2-54-210-205-226.compute-1.amazonaws.com openshift_node_labels="{'region':'infra','zone':'east'}" openshift_schedulable=true
-ec2-52-87-203-168.compute-1.amazonaws.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
-ec2-54-144-236-48.compute-1.amazonaws.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+openshift-master openshift_node_labels="{'region':'infra','zone':'east'}" openshift_schedulable=True
+openshift-worker1 openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+openshift-worker2 openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+openshift-gluster1 openshift_node_labels="{'region': 'primary', 'zone': 'east'}" openshift_schedulable=True
+openshift-gluster2 openshift_node_labels="{'region': 'primary', 'zone': 'east'}" openshift_schedulable=True
+openshift-gluster3 openshift_node_labels="{'region': 'primary', 'zone': 'east'}" openshift_schedulable=True
+

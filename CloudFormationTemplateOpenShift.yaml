@@ -64,6 +64,8 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref internetgatewayos
 
+# master node
+
   openshiftmaster:
     Type: 'AWS::EC2::Instance'
     Properties:
@@ -89,12 +91,13 @@ Resources:
             "Ebs": {
               "VolumeType": "io1",
               "Iops": "300",
-              "DeleteOnTermination": "false",
+              "DeleteOnTermination": "true",
               "VolumeSize": "50"
             }
           }
         ]
 
+# worker nodes
 
   openshiftworker1:
     Type: 'AWS::EC2::Instance'
@@ -121,7 +124,7 @@ Resources:
             "Ebs": {
               "VolumeType": "io1",
               "Iops": "300",
-              "DeleteOnTermination": "false",
+              "DeleteOnTermination": "true",
               "VolumeSize": "50"
             }
           }
@@ -152,12 +155,170 @@ Resources:
             "Ebs": {
               "VolumeType": "io1",
               "Iops": "300",
-              "DeleteOnTermination": "false",
+              "DeleteOnTermination": "true",
               "VolumeSize": "50"
             }
           }
         ]
 
+# gluster nodes
+
+  openshiftgluster1:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: openshift-gluster1
+        - Key: kubernetes.io/cluster/openshift-on-aws
+          Value: openshift-on-aws
+      InstanceType: m4.xlarge
+      KeyName: !Ref KeyName
+      AvailabilityZone: !Ref AvailabilityZone
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          SubnetId: !Ref subnet
+          GroupSet:
+           - !Ref workersecgroup
+           - !Ref clusterchatter
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", CentOS7]
+      BlockDeviceMappings: [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeType": "io1",
+              "Iops": "300",
+              "DeleteOnTermination": "true",
+              "VolumeSize": "50"
+            }
+          }
+        ]
+
+  openshiftgluster2:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: openshift-gluster2
+        - Key: kubernetes.io/cluster/openshift-on-aws
+          Value: openshift-on-aws
+      InstanceType: m4.xlarge
+      KeyName: !Ref KeyName
+      AvailabilityZone: !Ref AvailabilityZone
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          SubnetId: !Ref subnet
+          GroupSet:
+           - !Ref workersecgroup
+           - !Ref clusterchatter
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", CentOS7]
+      BlockDeviceMappings: [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeType": "io1",
+              "Iops": "300",
+              "DeleteOnTermination": "true",
+              "VolumeSize": "50"
+            }
+          }
+        ]
+
+  openshiftgluster1:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: openshift-gluster1
+        - Key: kubernetes.io/cluster/openshift-on-aws
+          Value: openshift-on-aws
+      InstanceType: m4.xlarge
+      KeyName: !Ref KeyName
+      AvailabilityZone: !Ref AvailabilityZone
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          SubnetId: !Ref subnet
+          GroupSet:
+           - !Ref workersecgroup
+           - !Ref clusterchatter
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", CentOS7]
+      BlockDeviceMappings: [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeType": "io1",
+              "Iops": "300",
+              "DeleteOnTermination": "true",
+              "VolumeSize": "50"
+            }
+          }
+        ]
+
+  openshiftgluster2:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: openshift-gluster2
+        - Key: kubernetes.io/cluster/openshift-on-aws
+          Value: openshift-on-aws
+      InstanceType: m4.xlarge
+      KeyName: !Ref KeyName
+      AvailabilityZone: !Ref AvailabilityZone
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          SubnetId: !Ref subnet
+          GroupSet:
+           - !Ref workersecgroup
+           - !Ref clusterchatter
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", CentOS7]
+      BlockDeviceMappings: [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeType": "io1",
+              "Iops": "300",
+              "DeleteOnTermination": "true",
+              "VolumeSize": "50"
+            }
+          }
+        ]
+
+  openshiftgluster3:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: openshift-gluster3
+        - Key: kubernetes.io/cluster/openshift-on-aws
+          Value: openshift-on-aws
+      InstanceType: m4.xlarge
+      KeyName: !Ref KeyName
+      AvailabilityZone: !Ref AvailabilityZone
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          SubnetId: !Ref subnet
+          GroupSet:
+           - !Ref workersecgroup
+           - !Ref clusterchatter
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", CentOS7]
+      BlockDeviceMappings: [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "VolumeType": "io1",
+              "Iops": "300",
+              "DeleteOnTermination": "true",
+              "VolumeSize": "50"
+            }
+          }
+        ]
+
+# docker volumes
 
   volume1:
     Type: 'AWS::EC2::Volume'
@@ -200,6 +361,95 @@ Resources:
       Device: '/dev/xvdb'
       VolumeId: !Ref volume3
       InstanceId: !Ref openshiftworker2
+
+  volume4:
+    Type: 'AWS::EC2::Volume'
+    Properties:
+      AvailabilityZone: !GetAtt openshiftgluster1.AvailabilityZone
+      Size: 50
+    DeletionPolicy: Delete
+
+  volat4:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      Device: '/dev/xvdb'
+      VolumeId: !Ref volume4
+      InstanceId: !Ref openshiftgluster1
+
+  volume5:
+    Type: 'AWS::EC2::Volume'
+    Properties:
+      AvailabilityZone: !GetAtt openshiftgluster2.AvailabilityZone
+      Size: 50
+    DeletionPolicy: Delete
+
+  volat5:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      Device: '/dev/xvdb'
+      VolumeId: !Ref volume5
+      InstanceId: !Ref openshiftgluster2
+
+  volume6:
+    Type: 'AWS::EC2::Volume'
+    Properties:
+      AvailabilityZone: !GetAtt openshiftgluster3.AvailabilityZone
+      Size: 50
+    DeletionPolicy: Delete
+
+  volat6:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      Device: '/dev/xvdb'
+      VolumeId: !Ref volume6
+      InstanceId: !Ref openshiftgluster3
+
+
+# gluster volumes
+
+  gvolume1:
+    Type: 'AWS::EC2::Volume'
+    Properties:
+      AvailabilityZone: !GetAtt openshiftmaster.AvailabilityZone
+      Size: 50
+    DeletionPolicy: Delete
+
+  gvolat1:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      Device: '/dev/xvdc'
+      VolumeId: !Ref gvolume1
+      InstanceId: !Ref openshiftgluster1
+
+  gvolume2:
+    Type: 'AWS::EC2::Volume'
+    Properties:
+      AvailabilityZone: !GetAtt openshiftworker1.AvailabilityZone
+      Size: 50
+    DeletionPolicy: Delete
+
+  gvolat2:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      Device: '/dev/xvdc'
+      VolumeId: !Ref gvolume2
+      InstanceId: !Ref openshiftgluster2
+
+  gvolume3:
+    Type: 'AWS::EC2::Volume'
+    Properties:
+      AvailabilityZone: !GetAtt openshiftworker2.AvailabilityZone
+      Size: 50
+    DeletionPolicy: Delete
+
+  gvolat3:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      Device: '/dev/xvdc'
+      VolumeId: !Ref gvolume3
+      InstanceId: !Ref openshiftgluster3
+
+# security groups, etc.
 
   clusterchatter:
     Type: AWS::EC2::SecurityGroup

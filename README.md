@@ -26,7 +26,12 @@ git checkout release-3.9
 
 ```
 
-Having done all that, you will then need to upload [the cloudformation template](../blob/CloudFormationTemplate) to an S3 bucket, and then type the following incantation (substituting your information where you see angle brackets):
+Having done all that, you will then need to upload [the cloudformation template](../blob/CloudFormationTemplate) to an S3 bucket,
+```
+aws s3 cp CloudFormationTemplateOpenShift.yaml s3://<your s3 bucket and filename>
+```
+and then type the following incantation (substituting your information where you see angle brackets):
+
 ```
 aws cloudformation create-stack --region us-east-1  \
                                 --stack-name <your stack name> \
@@ -47,7 +52,7 @@ ansible-playbook -i hosts openshift-ansible/playbooks/deploy_cluster.yml --key-f
 ```
 Once that is done, ssh into the master and type
 ```
-sudo htpasswd /etc/origin/master/htpasswd <your password>
+sudo htpasswd /etc/origin/master/htpasswd <Your password>
 oc adm policy add-cluster-role-to-user cluster-admin admin
 ```
 And you should be in business:  go to your master node public DNS at port 8443 and start being shifty!

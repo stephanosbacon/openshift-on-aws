@@ -25,6 +25,8 @@
         - sos
         - psacct
         - atomic
+        - glusterfs-fuse
+        - ntp
 
     - name: enable network-manager
       shell: systemctl enable NetworkManager && systemctl start NetworkManager
