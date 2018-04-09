@@ -4,6 +4,8 @@
 
 This repo contains a cloud formation template and ansible scripts for setting up a simple 3-node (1 master, 2 app nodes) OpenShift Origin cluster on AWS.  This started as a short exercise so I could have a cluster at my disposal on which to try things for which minishift on my laptop would not be sufficient.  In the process, I learned a few things that I thought I'd capture.
 
+NOTE:  This has been updated now to run gluster CNS os it's actually setting up an addiitonal 3 nodes for the gluster cluster.
+
 To give credit its due, I started by reading [this excellent blog post](https://sysdig.com/blog/deploy-openshift-aws/) that describes how to set up a 3.6 cluster.  A lot has changed between 3.6 and 3.9, so getting things working required changes to the cloud formation template, as well as to the inventory file.  More on that later.
 
 Another resource that is very informative is [this](https://github.com/gnunn1/openshift-aws-setup) github repo that has a more sophisticated (and better automated) openshift-on-aws setup.  It relies on ansible to set up the aws environment, as well as the openshift deployment.
@@ -81,4 +83,9 @@ I think this is a bug, but what I found was that the install failed when trying 
 # https://github.com/openshift/openshift-ansible/issues/7808
 #
 osm_etcd_image=registry.redhat.io/rhel7/etcd
+```
+### Stopping and Restarting AWS Nodes in this setup
+Likely obvious, but if you set up your cluster, and then stop the instances (e.g. to save some money when you're not using them), when they restart, they will get new public IPs and hostnames so certificates will not be valid.  So, if you do restart your cluster, you'll need to do this:
+```
+ansible-playbook --key-file <keys.pem file> -i hosts ./openshift-ansible/playbooks/redeploy-certificates.yml
 ```
