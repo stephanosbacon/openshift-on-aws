@@ -85,7 +85,8 @@ I think this is a bug, but what I found was that the install failed when trying 
 osm_etcd_image=registry.redhat.io/rhel7/etcd
 ```
 ### Stopping and Restarting AWS Nodes in this setup
-Likely obvious, but if you set up your cluster, and then stop the instances (e.g. to save some money when you're not using them), when they restart, they will get new public IPs and hostnames so certificates will not be valid.  So, if you do restart your cluster, you'll need to do this:
-```
-ansible-playbook --key-file <keys.pem file> -i hosts ./openshift-ansible/playbooks/redeploy-certificates.yml
-```
+Likely obvious, but if you set up your cluster, and then stop the instances (e.g. to save some money when you're not using them), when they restart, they will get new public IPs and hostnames so certificates will not be valid, and the openshift master config will have a bunch of references to the old public ip.
+
+There is no supported (or even recommended) way to fix this.  Changing the master config and redeploying certificates (i.e. running the redeploy_certificates playbook) will make it possible for the oc command line to work, but getting the console  working after that change has been elusive.
+
+Using an elastic IP for the master should work, but I haven't done it yet.
