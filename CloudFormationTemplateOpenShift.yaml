@@ -9,6 +9,11 @@ Parameters:
   AvailabilityZone:
     Description: Availability zone to deploy
     Type: AWS::EC2::AvailabilityZone::Name
+  DeployGluster:
+    Description: set to true in order to deploy 3 additional gluster nodes and volumes
+    Type: String
+    AllowedValues: [true, false]
+    Default: false
 
 Mappings:
 #########
@@ -17,6 +22,10 @@ Mappings:
       CentOS7: "ami-4bf3d731"
 #    us-east-2:
 #      CentOS7: ...
+
+Conditions:
+  ShouldDeployGluster:
+    !Equals [true, !Ref DeployGluster]
 
 Resources:
 ##########
@@ -165,6 +174,7 @@ Resources:
 
   openshiftgluster1:
     Type: 'AWS::EC2::Instance'
+    Condition: ShouldDeployGluster
     Properties:
       Tags:
         - Key: Name
@@ -196,68 +206,7 @@ Resources:
 
   openshiftgluster2:
     Type: 'AWS::EC2::Instance'
-    Properties:
-      Tags:
-        - Key: Name
-          Value: openshift-gluster2
-        - Key: kubernetes.io/cluster/openshift-on-aws
-          Value: openshift-on-aws
-      InstanceType: m4.xlarge
-      KeyName: !Ref KeyName
-      AvailabilityZone: !Ref AvailabilityZone
-      NetworkInterfaces:
-        - AssociatePublicIpAddress: "true"
-          DeviceIndex: "0"
-          SubnetId: !Ref subnet
-          GroupSet:
-           - !Ref workersecgroup
-           - !Ref clusterchatter
-      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", CentOS7]
-      BlockDeviceMappings: [
-          {
-            "DeviceName": "/dev/sda1",
-            "Ebs": {
-              "VolumeType": "io1",
-              "Iops": "300",
-              "DeleteOnTermination": "true",
-              "VolumeSize": "50"
-            }
-          }
-        ]
-
-  openshiftgluster1:
-    Type: 'AWS::EC2::Instance'
-    Properties:
-      Tags:
-        - Key: Name
-          Value: openshift-gluster1
-        - Key: kubernetes.io/cluster/openshift-on-aws
-          Value: openshift-on-aws
-      InstanceType: m4.xlarge
-      KeyName: !Ref KeyName
-      AvailabilityZone: !Ref AvailabilityZone
-      NetworkInterfaces:
-        - AssociatePublicIpAddress: "true"
-          DeviceIndex: "0"
-          SubnetId: !Ref subnet
-          GroupSet:
-           - !Ref workersecgroup
-           - !Ref clusterchatter
-      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", CentOS7]
-      BlockDeviceMappings: [
-          {
-            "DeviceName": "/dev/sda1",
-            "Ebs": {
-              "VolumeType": "io1",
-              "Iops": "300",
-              "DeleteOnTermination": "true",
-              "VolumeSize": "50"
-            }
-          }
-        ]
-
-  openshiftgluster2:
-    Type: 'AWS::EC2::Instance'
+    Condition: ShouldDeployGluster
     Properties:
       Tags:
         - Key: Name
@@ -289,6 +238,7 @@ Resources:
 
   openshiftgluster3:
     Type: 'AWS::EC2::Instance'
+    Condition: ShouldDeployGluster
     Properties:
       Tags:
         - Key: Name
@@ -364,6 +314,7 @@ Resources:
 
   volume4:
     Type: 'AWS::EC2::Volume'
+    Condition: ShouldDeployGluster
     Properties:
       AvailabilityZone: !GetAtt openshiftgluster1.AvailabilityZone
       Size: 50
@@ -371,6 +322,7 @@ Resources:
 
   volat4:
     Type: AWS::EC2::VolumeAttachment
+    Condition: ShouldDeployGluster
     Properties:
       Device: '/dev/xvdb'
       VolumeId: !Ref volume4
@@ -378,6 +330,7 @@ Resources:
 
   volume5:
     Type: 'AWS::EC2::Volume'
+    Condition: ShouldDeployGluster
     Properties:
       AvailabilityZone: !GetAtt openshiftgluster2.AvailabilityZone
       Size: 50
@@ -385,6 +338,7 @@ Resources:
 
   volat5:
     Type: AWS::EC2::VolumeAttachment
+    Condition: ShouldDeployGluster
     Properties:
       Device: '/dev/xvdb'
       VolumeId: !Ref volume5
@@ -392,6 +346,7 @@ Resources:
 
   volume6:
     Type: 'AWS::EC2::Volume'
+    Condition: ShouldDeployGluster
     Properties:
       AvailabilityZone: !GetAtt openshiftgluster3.AvailabilityZone
       Size: 50
@@ -399,6 +354,7 @@ Resources:
 
   volat6:
     Type: AWS::EC2::VolumeAttachment
+    Condition: ShouldDeployGluster
     Properties:
       Device: '/dev/xvdb'
       VolumeId: !Ref volume6
@@ -409,6 +365,7 @@ Resources:
 
   gvolume1:
     Type: 'AWS::EC2::Volume'
+    Condition: ShouldDeployGluster
     Properties:
       AvailabilityZone: !GetAtt openshiftmaster.AvailabilityZone
       Size: 50
@@ -416,6 +373,7 @@ Resources:
 
   gvolat1:
     Type: AWS::EC2::VolumeAttachment
+    Condition: ShouldDeployGluster
     Properties:
       Device: '/dev/xvdc'
       VolumeId: !Ref gvolume1
@@ -423,6 +381,7 @@ Resources:
 
   gvolume2:
     Type: 'AWS::EC2::Volume'
+    Condition: ShouldDeployGluster
     Properties:
       AvailabilityZone: !GetAtt openshiftworker1.AvailabilityZone
       Size: 50
@@ -430,6 +389,7 @@ Resources:
 
   gvolat2:
     Type: AWS::EC2::VolumeAttachment
+    Condition: ShouldDeployGluster
     Properties:
       Device: '/dev/xvdc'
       VolumeId: !Ref gvolume2
@@ -437,6 +397,7 @@ Resources:
 
   gvolume3:
     Type: 'AWS::EC2::Volume'
+    Condition: ShouldDeployGluster
     Properties:
       AvailabilityZone: !GetAtt openshiftworker2.AvailabilityZone
       Size: 50
@@ -444,6 +405,7 @@ Resources:
 
   gvolat3:
     Type: AWS::EC2::VolumeAttachment
+    Condition: ShouldDeployGluster
     Properties:
       Device: '/dev/xvdc'
       VolumeId: !Ref gvolume3
@@ -491,5 +453,10 @@ Resources:
       - IpProtocol: tcp
         FromPort: '8443'
         ToPort: '8443'
+        CidrIp: 0.0.0.0/0
+# This makes edge terminated routes work
+      - IpProtocol: tcp
+        FromPort: '443'
+        ToPort: '443'
         CidrIp: 0.0.0.0/0
 

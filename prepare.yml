@@ -42,3 +42,15 @@
     - name: enable docker
       shell: systemctl enable docker && systemctl start docker
 
+- hosts: masters
+  gather_facts: no
+  
+  tasks:
+
+    - name: install python-passlib
+      yum: state=latest name={{ item }}
+      with_items:
+        - python-passlib
+
+
+  

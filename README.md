@@ -4,8 +4,6 @@
 
 This repo contains a cloud formation template and ansible scripts for setting up a simple 3-node (1 master, 2 app nodes) OpenShift Origin cluster on AWS.  This started as a short exercise so I could have a cluster at my disposal on which to try things for which minishift on my laptop would not be sufficient.  In the process, I learned a few things that I thought I'd capture.
 
-NOTE:  This has been updated now to run gluster CNS os it's actually setting up an addiitonal 3 nodes for the gluster cluster.
-
 To give credit its due, I started by reading [this excellent blog post](https://sysdig.com/blog/deploy-openshift-aws/) that describes how to set up a 3.6 cluster.  A lot has changed between 3.6 and 3.9, so getting things working required changes to the cloud formation template, as well as to the inventory file.  More on that later.
 
 Another resource that is very informative is [this](https://github.com/gnunn1/openshift-aws-setup) github repo that has a more sophisticated (and better automated) openshift-on-aws setup.  It relies on ansible to set up the aws environment, as well as the openshift deployment.
@@ -32,18 +30,26 @@ Having done all that, you will then need to upload [the cloudformation template]
 ```
 aws s3 cp CloudFormationTemplateOpenShift.yaml s3://<your s3 bucket and filename>
 ```
-and then type the following incantation (substituting your information where you see angle brackets):
+and then type the following incantation (substituting your information where you see angle brackets).  If you want to deploy Gluster CNS, change the ParameterValue of the DeployGluster parameter to true.  This will create three addtional nodes, as well as the necessary volumes for the CNS cluster.  
 
 ```
 aws cloudformation create-stack --region us-east-1  \
                                 --stack-name <your stack name> \
                                 --template-url https://s3.amazonaws.com/<your s3 bucket and filename> \
                                 -parameters ParameterKey=AvailabilityZone,ParameterValue=us-east-1e \
+                                ParameterKey=DeployGluster,ParameterValue=false \
                                 ParameterKey=KeyName,ParameterValue=<name of your key pair .pem file> --capabilities=CAPABILITY_IAM
 ```
 As it stands, things are hard-coded to run in the us-east-1e zone.  The ami id is also hard coded (It is the official CentOS 7.4 AMI)
 
-Once the stack is set up, first, edit hosts, replacing the DNS names of the machines with the ones that you just created, and then run the following in sequence of commands:
+Once the stack is set up, first, edit hosts, replacing the DNS names of the machines with the ones that you just created.  If you created the hosts for gluser CNS in the cloud formation template, then uncomment the glusterfs references in the hosts file.
+
+An alternative to editing the hosts file is to get the [ansible dynamic inventory script, ec2.py](http://docs.ansible.com/ansible/devel/user_guide/intro_dynamic_inventory.html#example-aws-ec2-external-inventory-script), as well as the associated ec2.ini file and run the following command:
+
+```
+eval cat hosts $(./ec2.py | ./substitute_hostnames.js) > inventory
+```
+Then run the following in sequence of commands, using ./inventory instead of ./hosts as the inventory file:
 
 ```
 ansible-playbook prepare.yml -i ./hosts --key-file <your keypair>.pem
