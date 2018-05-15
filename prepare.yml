@@ -27,6 +27,7 @@
         - atomic
         - glusterfs-fuse
         - ntp
+        - python-rhsm-certificates
 
     - name: enable network-manager
       shell: systemctl enable NetworkManager && systemctl start NetworkManager
