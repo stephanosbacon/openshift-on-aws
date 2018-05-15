@@ -26,7 +26,7 @@ git checkout release-3.9
 
 ```
 
-Having done all that, you will then need to upload [the cloudformation template](../blob/CloudFormationTemplate) to an S3 bucket,
+Having done all that, you will then need to upload [the cloudformation template](https://github.com/stephanosbacon/openshift-on-aws/blob/master/CloudFormationTemplateOpenShift.yaml) to an S3 bucket,
 ```
 aws s3 cp CloudFormationTemplateOpenShift.yaml s3://<your s3 bucket and filename>
 ```
