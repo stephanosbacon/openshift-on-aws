@@ -65,6 +65,10 @@ oc adm policy add-cluster-role-to-user cluster-admin admin
 ```
 And you should be in business:  go to your master node public DNS at port 8443 and start being shifty!
 
+## A Couple of Handy Tidbits
+ * I found [this blog post](https://blog.openshift.com/create-https-based-encrypted-urls-using-routes/) handy for setting up certificates
+ * One thing that isn't mentioned above and will be fixed in the future is that you should set the variable openshift_master_default_subdomain in the [OSEv3:vars] to <master public ip>.nip.io or whatever wildcard DNS you want if you want working routes to get created by default.  After the fact, you will have to ssh into your master node, edit /etc/origin/master/master-config.yaml, and change the routingConfig.subdomain entry to the appropriate value.  After that you have to restart the master with 'systemctl restart origin-master-api origin-master-controllers'
+ 
 ## Things Learned Along the Way
 
 ### Opt For The Containerized Install
